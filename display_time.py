@@ -1,13 +1,17 @@
+import configparser
+import socket
+import threading
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit
 from PySide6.QtCore import QTimer
 import datetime
 
 class TimeDisplayApp(QWidget):
-    def __init__(self):
+    def __init__(self, port):
         super().__init__()
         self.setWindowTitle("NetworkClock")
         self.setup_ui()
         self.timer.start()
+        self.start_tcp_server(port)
 
     def setup_ui(self):
         layout = QVBoxLayout(self)
@@ -49,9 +53,38 @@ class TimeDisplayApp(QWidget):
             return test_time
         except ValueError:
             return None
+    
+    def start_tcp_server(self, port):
+        def handle_client_connection(client_socket):
+            while True:
+                try:
+                    format_string = client_socket.recv(1024).decode('utf-8')
+                    if not format_string:
+                        break
+                    formatted_time = self.get_formatted_time(format_string)
+                    response = formatted_time if formatted_time else "Invalid format string"
+                    client_socket.send(response.encode('utf-8'))
+                except Exception as e:
+                    print(f"Error handling client: {e}")
+                    break
+            client_socket.close()
+
+        def server_thread():
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+                    server_socket.bind(('', port))
+                    server_socket.listen()
+                    while True:
+                        client_socket, _ = server_socket.accept()
+                        threading.Thread(target=handle_client_connection, args=(client_socket,)).start()
+
+        threading.Thread(target=server_thread, daemon=True).start()
 
 if __name__ == "__main__":
+    config = configparser.ConfigParser()
+    config.read('config.toml')
+    port = int(config['DEFAULT']['Port'])
+
     app = QApplication([])
-    window = TimeDisplayApp()
+    window = TimeDisplayApp(port)
     window.show()
     app.exec()
