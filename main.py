@@ -1,16 +1,26 @@
+import sys
 import configparser
 import socket
 import threading
+import datetime
+import subprocess
+from PySide6.QtCore import QTimer, QDateTime
 from PySide6.QtWidgets import (
     QApplication,
+    QPushButton,
     QWidget,
     QVBoxLayout,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
+    QDateTimeEdit,
 )
-from PySide6.QtCore import QTimer
-import datetime
 
+def set_system_time(time_str):
+    if "linux" in sys.platform:
+        subprocess.run(["sudo", "python3", "set_time_linux.py", time_str], check=True)
+    elif "win" in sys.platform:
+        subprocess.run(["powershell", "Start-Process", "python", "-ArgumentList", f"'set_time_windows.py', '{time_str}'", "-Verb", "RunAs"], check=True)
 
 class TimeDisplayApp(QWidget):
     def __init__(self, port):
@@ -34,13 +44,25 @@ class TimeDisplayApp(QWidget):
         self.examples_label = QLabel(
             "Examples: '%Y-%m-%d', '%H:%M:%S', '%m/%d/%Y %I:%M %p'"
         )
+        self.dateTimeEdit = QDateTimeEdit(QDateTime.currentDateTime())
+        self.dateTimeEdit.setDisplayFormat("yyyy-MM-dd HH:mm:ss")
+        self.dateTimeEdit.setCalendarPopup(True)
+        self.setTimeBtn = QPushButton("Set System Time")
+        set_time = QHBoxLayout()
+        set_time.addWidget(self.dateTimeEdit)
+        set_time.addWidget(self.setTimeBtn)
+
         self.result_label = QLabel("Current time will be shown here.")
 
         # Add components to layout
         layout.addWidget(self.prompt_label)
         layout.addWidget(self.format_input)
-        layout.addWidget(self.examples_label)  # Add examples label
+        layout.addWidget(self.examples_label)
+        layout.addLayout(set_time)
         layout.addWidget(self.result_label)
+
+        # Connect button to set system time
+        self.setTimeBtn.clicked.connect(set_system_time)
 
         # Timer setup
         self.timer = QTimer(self)
@@ -49,6 +71,13 @@ class TimeDisplayApp(QWidget):
 
         # Update time display whenever the format input changes
         self.format_input.textChanged.connect(self.update_time_display)
+
+    def set_system_time(self):
+        time_str = self.dateTimeEdit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
+        if "linux" in sys.platform:
+            set_system_time_linux(time_str)
+        elif "win" in sys.platform:
+            set_system_time_windows(time_str)
 
     def update_time_display(self):
         format_string = self.format_input.text() or "%Y-%m-%d %H:%M:%S"
