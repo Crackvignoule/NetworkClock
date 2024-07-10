@@ -29,7 +29,7 @@ class TimeDisplayApp(QWidget):
 
         # UI Components
         self.prompt_label = QLabel(
-            "Enter the date/time format string (e.g., '%Y-%m-%d %H:%M:%S'):"
+            "Enter the date/time format string:"
         )
         self.format_input = QLineEdit()
         self.format_input.setPlaceholderText(
