@@ -16,12 +16,6 @@ from PySide6.QtWidgets import (
     QDateTimeEdit,
 )
 
-def set_system_time(time_str):
-    if "linux" in sys.platform:
-        subprocess.run(["sudo", "python3", "set_time_linux.py", time_str], check=True)
-    elif "win" in sys.platform:
-        subprocess.run(["powershell", "Start-Process", "python", "-ArgumentList", f"'set_time_windows.py', '{time_str}'", "-Verb", "RunAs"], check=True)
-
 class TimeDisplayApp(QWidget):
     def __init__(self, port):
         super().__init__()
@@ -62,7 +56,7 @@ class TimeDisplayApp(QWidget):
         layout.addWidget(self.result_label)
 
         # Connect button to set system time
-        self.setTimeBtn.clicked.connect(set_system_time)
+        self.setTimeBtn.clicked.connect(self.set_system_time)
 
         # Timer setup
         self.timer = QTimer(self)
@@ -74,10 +68,12 @@ class TimeDisplayApp(QWidget):
 
     def set_system_time(self):
         time_str = self.dateTimeEdit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
+        print(f"GUI setting system time to: {time_str}")
         if "linux" in sys.platform:
-            set_system_time_linux(time_str)
+            subprocess.run(["sudo", "python3", "set_time_linux.py", time_str], check=True)
         elif "win" in sys.platform:
-            set_system_time_windows(time_str)
+            subprocess.run(["powershell", "Start-Process", "python", "-ArgumentList", f"'set_time_windows.py', '{time_str}'", "-Verb", "RunAs"], check=True)
+
 
     def update_time_display(self):
         format_string = self.format_input.text() or "%Y-%m-%d %H:%M:%S"
