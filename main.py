@@ -72,7 +72,7 @@ class TimeDisplayApp(QWidget):
         if "linux" in sys.platform:
             subprocess.run(["sudo", "python3", "set_time_linux.py", time_str], check=True)
         elif "win" in sys.platform:
-            subprocess.run(["powershell", "Start-Process", "python", "-ArgumentList", f"'set_time_windows.py', '{time_str}'", "-Verb", "RunAs"], check=True)
+            subprocess.run(["powershell", "Start-Process", "python", "-ArgumentList", f"'set_time_windows.py \"{time_str}\"'", "-Verb", "RunAs"], check=True)
 
 
     def update_time_display(self):
