@@ -1,5 +1,6 @@
 import sys
-import configparser
+import toml
+import logging
 import socket
 import threading
 import datetime
@@ -17,18 +18,21 @@ from PySide6.QtWidgets import (
 )
 
 def load_port():
-    config = configparser.ConfigParser()
-    config.read("config.toml")
     try:
+        config = toml.load("config.toml")
         port = int(config["SERVER"]["port"])
-        if 1024 <= port <= 65535:
-            return port
-        else:
-            raise ValueError("Port number must be between 1024 and 65535")
+        if not 1024 <= port <= 65535:
+            raise ValueError("Port number must be between 1024 and 65535.")
+        return port
+    except ValueError as e:
+        logging.error(f"Invalid port number: {e}. Using default port 12345")
+    except FileNotFoundError:
+        logging.error("Config file not found. Using default port 12345")
+    except KeyError:
+        logging.error("Missing 'SERVER' section or 'port' key in config. Using default port 12345")
     except Exception as e:
-        print(f"Invalid port number: {port}. {e}")
-        print("Using default port 12345")
-        return 12345
+        logging.error(f"Unexpected error: {e}. Using default port 12345")
+    return 12345
 
 class TimeDisplayApp(QWidget):
     def __init__(self, port):
