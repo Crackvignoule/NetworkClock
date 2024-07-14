@@ -31,7 +31,7 @@ python main.py
 
 ## Getting Time via TCP
 
-NetworkClock allows users to retrieve the current time in a custom format over TCP/IP. To use this feature, ensure the NetworkClock app is running, then connect to it using the configured port (default is 12345).
+NetworkClock allows users to retrieve the current time in a custom format over TCP/IP. To use this feature, ensure the NetworkClock app is running, then connect to it using the configured port (default is 12345). You can edit the port in config.toml
 
 ### Example using netcat:
 
