@@ -39,4 +39,4 @@ NetworkClock allows users to retrieve the current time in a custom format over T
 echo "%Y-%m-%d %H:%M:%S" | nc <server-ip> 12345
 ```
 
-You can refer to the [strftime.org](https://strftime.org/) website. It provides a comprehensive list of formatting options that you can use to customize the time output according to your needs.
+You can refer to [strftime.org](https://strftime.org/) or [https://strftime.org](https://www.strfti.me/). It provides a comprehensive list of formatting options that you can use to customize the time output according to your needs.
