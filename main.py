@@ -70,9 +70,9 @@ class TimeDisplayApp(QWidget):
         time_str = self.dateTimeEdit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
         print(f"GUI setting system time to: {time_str}")
         if "linux" in sys.platform:
-            subprocess.run(["sudo", "python3", "set_time_linux.py", time_str], check=True)
+            subprocess.run(["python3", "set_time_linux.py", time_str], check=True)
         elif "win" in sys.platform:
-            subprocess.run(["powershell", "Start-Process", "python", "-ArgumentList", f"'set_time_windows.py \"{time_str}\"'", "-Verb", "RunAs"], check=True)
+            subprocess.run(["powershell", "Start-Process", "python", "-ArgumentList", f"'set_time_windows.py \"{time_str}\"'"], check=True)
 
 
     def update_time_display(self):
