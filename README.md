@@ -4,7 +4,7 @@
 
 # NetworkClock
 
-NetworkClock is a Python application designed to display the current time in a custom user defined format. It also allow users to set the system time through a graphical user interface (GUI). Additionally, a remote user can get the time with a custom format via TCP/IP. It supports both Linux and Windows platforms.
+NetworkClock is a Python application designed to display the current time in a custom user defined format. It also allow users to set the system time through a graphical user interface (GUI). Additionally, a remote user can get the time with a custom format via TCP/IP. It supports both Linux and Windows platforms. Developed by Killian PAVY
 
 ## Features
 
