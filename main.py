@@ -16,6 +16,20 @@ from PySide6.QtWidgets import (
     QDateTimeEdit,
 )
 
+def load_port():
+    config = configparser.ConfigParser()
+    config.read("config.toml")
+    try:
+        port = int(config["SERVER"]["port"])
+        if 1024 <= port <= 65535:
+            return port
+        else:
+            raise ValueError("Port number must be between 1024 and 65535")
+    except Exception as e:
+        print(f"Invalid port number: {port}. {e}")
+        print("Using default port 12345")
+        return 12345
+
 class TimeDisplayApp(QWidget):
     def __init__(self, port):
         super().__init__()
@@ -60,7 +74,7 @@ class TimeDisplayApp(QWidget):
 
         # Timer setup
         self.timer = QTimer(self)
-        self.timer.setInterval(1000)  # Update every second
+        self.timer.setInterval(500)
         self.timer.timeout.connect(self.update_time_display)
 
         # Update time display whenever the format input changes
@@ -145,9 +159,7 @@ class TimeDisplayApp(QWidget):
 
 
 if __name__ == "__main__":
-    config = configparser.ConfigParser()
-    config.read("config.toml")
-    port = int(config["DEFAULT"]["port"])
+    port = load_port()
 
     app = QApplication([])
     window = TimeDisplayApp(port)
