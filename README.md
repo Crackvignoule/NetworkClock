@@ -40,3 +40,9 @@ echo "%Y-%m-%d %H:%M:%S" | nc <server-ip> 12345
 ```
 
 You can refer to [strftime.org](https://strftime.org/) or [https://strftime.org](https://www.strfti.me/). It provides a comprehensive list of formatting options that you can use to customize the time output according to your needs.
+
+## Additional Information
+
+NetworkClock runs on Python 3.x, which supports DEP. This means our application benefits from this layer of security automatically, provided the operating system is configured to support DEP (Windows systems are configured as "OptIn" or "OptOut" by default).
+
+In both utils/set_time_linux.py and utils/set_time_windows.py, only the necessary commands are executed with elevated privileges, ensuring that the rest of the script runs with normal user privileges to minimize security risks.
