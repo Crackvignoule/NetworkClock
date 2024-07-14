@@ -1,5 +1,6 @@
-
-![NetworkClock](https://i.imgur.com/860WSwn.png)
+<div align="center">
+    <img src="https://i.imgur.com/860WSwn.png" alt="NetworkClock">
+</div>
 
 # NetworkClock
 
