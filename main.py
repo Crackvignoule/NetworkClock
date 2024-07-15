@@ -1,4 +1,3 @@
-import os
 import ctypes
 import sys
 import toml
@@ -6,7 +5,6 @@ import logging
 import socket
 import threading
 import datetime
-import subprocess
 from PySide6.QtCore import QTimer, QDateTime
 from PySide6.QtWidgets import (
     QApplication,
@@ -89,10 +87,10 @@ class TimeDisplayApp(QWidget):
     def set_system_time(self):
         time_str = self.dateTimeEdit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
         print(f"GUI setting system time to: {time_str}")
-        if "linux" in sys.platform:
-            subprocess.run(["python3", "utils/set_time_linux.py", time_str], check=True)
-        elif "win" in sys.platform:
+        if "win" in sys.platform:
             ctypes.windll.shell32.ShellExecuteW(None, "open", sys.executable, f"utils/set_time_windows.py \"{time_str}\"", None, 1)
+        else:
+            print("Setting system time is not supported on this platform")
 
     def update_time_display(self):
         format_string = self.format_input.text() or "%Y-%m-%d %H:%M:%S"

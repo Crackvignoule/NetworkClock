@@ -4,14 +4,13 @@
 
 # NetworkClock
 
-NetworkClock is a Python application designed to display the current time in a custom user defined format. It also allow users to set the system time through a graphical user interface (GUI). Additionally, a remote user can get the time with a custom format via TCP/IP. It supports both Linux and Windows platforms. Developed by Killian PAVY
+NetworkClock is a Python application designed to display the current time in a custom user defined format. It also allow users to set the system time through a graphical user interface (GUI). Additionally, a remote user can get the time with a custom format via TCP/IP. Developed by Killian PAVY
 
 ## Features
 
 - Display the current time in a custom format.
 - Set the system time from the GUI.
 - User-friendly GUI
-- Cross-platform support for Linux and Windows.
 
 ## Requirements
 
@@ -45,4 +44,4 @@ You can refer to [strftime.org](https://strftime.org/) or [https://strftime.org]
 
 NetworkClock runs on Python 3.x, which supports DEP. This means our application benefits from this layer of security automatically, provided the operating system is configured to support DEP (Windows systems are configured as "OptIn" or "OptOut" by default).
 
-In both utils/set_time_linux.py and utils/set_time_windows.py, only the necessary commands are executed with elevated privileges, ensuring that the rest of the script runs with normal user privileges to minimize security risks.
+In utils/set_time_windows.py, only the necessary commands are executed with elevated privileges, ensuring that the rest of the script runs with normal user privileges to minimize security risks.
