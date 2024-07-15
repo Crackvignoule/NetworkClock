@@ -2,9 +2,6 @@ import ctypes
 import sys
 import toml
 import logging
-import socket
-import threading
-import datetime
 from PySide6.QtCore import QTimer, QDateTime
 from PySide6.QtWidgets import (
     QApplication,
@@ -16,6 +13,8 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QDateTimeEdit,
 )
+
+from utils import TCPServer, get_formatted_time
 
 def load_port():
     try:
@@ -40,7 +39,8 @@ class TimeDisplayApp(QWidget):
         self.setWindowTitle("NetworkClock")
         self.setup_ui()
         self.timer.start()
-        self.start_tcp_server(port)
+        tcp_server = TCPServer(port)
+        tcp_server.start()
 
     def setup_ui(self):
         layout = QVBoxLayout(self)
@@ -94,71 +94,11 @@ class TimeDisplayApp(QWidget):
 
     def update_time_display(self):
         format_string = self.format_input.text() or "%Y-%m-%d %H:%M:%S"
-        formatted_time = self.get_formatted_time(format_string)
+        formatted_time = get_formatted_time(format_string)
         if formatted_time:
             self.result_label.setText(f"Current time: {formatted_time}")
         else:
             self.result_label.setText("Invalid format string")
-
-    @staticmethod
-    def get_formatted_time(format_string):
-        try:
-            current_time = datetime.datetime.now()
-            test_time = current_time.strftime(
-                format_string
-            )  # Test formatting with the current time
-            return test_time
-        except ValueError:
-            return None
-
-    def start_tcp_server(self, port):
-        def process_message(buffer):
-            print(rf"Buffer: {buffer}")
-            if buffer.endswith("\n"):
-                buffer = buffer[:-1]
-                formatted_time = self.get_formatted_time(buffer)
-                if formatted_time:
-                    return formatted_time
-                else:
-                    return "Invalid format string"
-            else:
-                return ""
-            
-        def handle_client(client_socket):
-            buffer = ""
-            while True:
-                try:
-                    data = client_socket.recv(1024).decode("utf-8")
-                    if not data:
-                        break
-
-                    buffer += data
-                    response = process_message(buffer)
-
-                    # Clear buffer up to the last newline character
-                    while "\n" in buffer:
-                        newline_pos = buffer.index("\n")
-                        buffer = buffer[newline_pos + 1:]
-
-                    client_socket.send(response.encode("utf-8"))
-                except Exception as e:
-                    print(f"Error handling client: {e}")
-                    break
-            client_socket.close()
-
-        def server_thread():
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-                server_socket.bind(('', port))
-                server_socket.listen()
-                print(f"Server listening on localhost:{port}")
-                
-                while True:
-                    client, addr = server_socket.accept()
-                    print(f"Accepted connection from {addr}")
-                    client_handler = threading.Thread(target=handle_client, args=(client,))
-                    client_handler.start()
-
-        threading.Thread(target=server_thread, daemon=True).start()
 
 
 if __name__ == "__main__":
