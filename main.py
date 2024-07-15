@@ -1,7 +1,5 @@
 import ctypes
 import sys
-import toml
-import logging
 from PySide6.QtCore import QTimer, QDateTime
 from PySide6.QtWidgets import (
     QApplication,
@@ -13,25 +11,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QDateTimeEdit,
 )
-
-from utils import TCPServer, get_formatted_time
-
-def load_port():
-    try:
-        config = toml.load("config.toml")
-        port = int(config["SERVER"]["port"])
-        if not 1024 <= port <= 65535:
-            raise ValueError("Port number must be between 1024 and 65535.")
-        return port
-    except ValueError as e:
-        logging.error(f"Invalid port number: {e}. Using default port 12345")
-    except FileNotFoundError:
-        logging.error("Config file not found. Using default port 12345")
-    except KeyError:
-        logging.error("Missing 'SERVER' section or 'port' key in config. Using default port 12345")
-    except Exception as e:
-        logging.error(f"Unexpected error: {e}. Using default port 12345")
-    return 12345
+from utils import TCPServer, get_formatted_time, get_port
 
 class TimeDisplayApp(QWidget):
     def __init__(self, port):
@@ -102,8 +82,7 @@ class TimeDisplayApp(QWidget):
 
 
 if __name__ == "__main__":
-    port = load_port()
-
+    port = get_port()
     app = QApplication([])
     window = TimeDisplayApp(port)
     window.show()
