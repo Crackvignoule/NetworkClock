@@ -30,7 +30,8 @@ python main.py
 
 ## Getting Time via TCP
 
-NetworkClock allows users to retrieve the current time in a custom format over TCP/IP. To use this feature, ensure the NetworkClock app is running, then connect to it using the configured port (default is 12345). You can edit the port in %USERPROFILE%/AppData/Local/Clock/config.toml
+NetworkClock allows users to retrieve the current time in a custom format over TCP/IP. To use this feature, ensure the NetworkClock app is running, then connect to it using the right port (default is 12345). You can edit the listening port in %USERPROFILE%/AppData/Local/Clock/config.toml
+Type your format string and press enter. The app will respond with the current time in the format you specified.
 
 ### Example using netcat:
 
@@ -42,6 +43,8 @@ You can refer to [strftime.org](https://strftime.org/) or [https://strftime.org]
 
 ## Additional Information
 
-NetworkClock runs on Python 3.x, which supports DEP. This means our application benefits from this layer of security automatically, provided the operating system is configured to support DEP (Windows systems are configured as "OptIn" or "OptOut" by default).
+NetworkClock is using windll.kernel32.SetProcessDEPPolicy(1) to enable Data Execution Prevention (DEP) for the process. This is a security feature that helps prevent code execution from data pages.
 
 In utils/set_time_windows.py, only the necessary commands are executed with elevated privileges, ensuring that the rest of the script runs with normal user privileges to minimize security risks.
+
+Port number is stored in %USERPROFILE%/AppData/Local/Clock/config.toml which is a secure location on Windows systems because it is only accessible by the user who installed the application.

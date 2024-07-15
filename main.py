@@ -13,6 +13,9 @@ from PySide6.QtWidgets import (
 )
 from utils import TCPServer, get_formatted_time, get_port
 
+# Enable Data Execution Prevention (DEP) for the process
+ctypes.windll.kernel32.SetProcessDEPPolicy(1)
+
 class TimeDisplayApp(QWidget):
     def __init__(self, port):
         super().__init__()
