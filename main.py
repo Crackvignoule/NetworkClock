@@ -1,3 +1,5 @@
+import os
+import ctypes
 import sys
 import toml
 import logging
@@ -90,8 +92,7 @@ class TimeDisplayApp(QWidget):
         if "linux" in sys.platform:
             subprocess.run(["python3", "utils/set_time_linux.py", time_str], check=True)
         elif "win" in sys.platform:
-            subprocess.run(["powershell", "Start-Process", "python", "-ArgumentList", f"'utils/set_time_windows.py \"{time_str}\"'"], check=True)
-
+            ctypes.windll.shell32.ShellExecuteW(None, "open", sys.executable, f"utils/set_time_windows.py \"{time_str}\"", None, 1)
 
     def update_time_display(self):
         format_string = self.format_input.text() or "%Y-%m-%d %H:%M:%S"
