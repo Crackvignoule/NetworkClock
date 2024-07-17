@@ -71,7 +71,7 @@ class TimeDisplayApp(QWidget):
         time_str = self.dateTimeEdit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
         print(f"GUI setting system time to: {time_str}")
         if "win" in sys.platform:
-            ctypes.windll.shell32.ShellExecuteW(None, "open", sys.executable, f"utils/set_time_windows.py \"{time_str}\"", None, 1)
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, f"utils/set_time_windows.py \"{time_str}\"", None, 1)
         else:
             print("Setting system time is not supported on this platform")
 
