@@ -3,12 +3,19 @@ from ctypes import wintypes
 import sys
 import datetime
 
+# Enable Data Execution Prevention (DEP) for the process
+ctypes.windll.kernel32.SetProcessDEPPolicy(1)
+
 def set_system_time_windows(time_str):
     # Convert string time to SYSTEMTIME structure
     try:
         # Parse the time string to datetime object
         dt = datetime.datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S")
-        
+        # Convert to UTC
+        local_tz = datetime.datetime.now().astimezone().tzinfo
+        dt = dt.replace(tzinfo=local_tz)
+        dt = dt.astimezone(datetime.timezone.utc)
+
         # Define SYSTEMTIME Structure
         class SYSTEMTIME(ctypes.Structure):
             _fields_ = [("wYear", wintypes.WORD),
