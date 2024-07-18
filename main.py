@@ -69,8 +69,11 @@ class TimeDisplayApp(QWidget):
 
     def set_system_time(self):
         time_str = self.dateTimeEdit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
+        print(f"GUI setting system time to: {time_str}")
         if "win" in sys.platform:
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, f"utils/set_time_windows.py \"{time_str}\"", None, 1)
+        else:
+            print("Setting system time is not supported on this platform")
 
     def update_time_display(self):
         format_string = self.format_input.text() or "%Y-%m-%d %H:%M:%S"

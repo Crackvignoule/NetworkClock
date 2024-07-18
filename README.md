@@ -46,3 +46,5 @@ You can refer to [strftime.org](https://strftime.org/) or [https://strftime.org]
 NetworkClock is using windll.kernel32.SetProcessDEPPolicy(1) to enable Data Execution Prevention (DEP) for the process. This is a security feature that helps prevent code execution from data pages.
 
 In utils/set_time_windows.py, only the necessary commands are executed with elevated privileges, ensuring that the rest of the script runs with normal user privileges to minimize security risks.
+
+Port number is stored in %USERPROFILE%/AppData/Local/Clock/config.toml which is a secure location on Windows systems because it is only accessible by the user who installed the application.

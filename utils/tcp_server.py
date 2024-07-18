@@ -7,6 +7,7 @@ class TCPServer:
         self.port = port
 
     def process_message(self, buffer):
+        print(f"Buffer: {buffer}")
         if buffer.endswith("\n"):
             buffer = buffer[:-1]
             formatted_time = get_formatted_time(buffer)
