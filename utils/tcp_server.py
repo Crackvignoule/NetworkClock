@@ -26,14 +26,15 @@ class TCPServer:
                     break
 
                 buffer += data
-                response = self.process_message(buffer)
 
-                # Clear buffer up to the last newline character
+                # Process each message that ends with a newline character
                 while "\n" in buffer:
                     newline_pos = buffer.index("\n")
-                    buffer = buffer[newline_pos + 1:]
+                    complete_message = buffer[:newline_pos]
+                    buffer = buffer[newline_pos + 1:]  # Retain incomplete message
 
-                client_socket.send(response.encode("utf-8"))
+                    response = self.process_message(complete_message + "\n")  # Add back the newline for processing
+                    client_socket.send(response.encode("utf-8"))
             except Exception as e:
                 print(f"Error handling client: {e}")
                 break
